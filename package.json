@@ -1,24 +1,23 @@
 {
-  "name": "colibri-common-utilities",
-  "version": "3.3.1",
-  "description": "colibri-common-utilities",
+  "name": "@p1nhu/colibri-common-utils",
+  "version": "1.0.12",
+  "description": "colibri-common-utils",
   "main": "index.js",
+
   "scripts": {
     "watch": "tsc --watch",
-    "build": "npx webpack --config webpack.config.js"
-  },
-  "repository": {
+    "build": "npx webpack --config webpack.config.js"  },  "repository": {
     "type": "git",
-    "url": "git+https://github.com/SirSalamandra/colibri-common-utilities.git"
-  },
-  "author": "",
+    "url": "git+https://github.com/DevPhelipe/colibri-common-utilities.git"  },"author": "",
+
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/SirSalamandra/colibri-common-utilities/issues"
+    "url": "https://github.com/DevPhelipe/colibri-common-utilities/issues"
   },
-  "homepage": "https://github.com/SirSalamandra/colibri-common-utilities#readme",
+  
+  "homepage": "https://github.com/DevPhelipe/colibri-common-utilities#readme",
   "devDependencies": {
     "webpack": "^5.70.0",
-    "webpack-cli": "^4.9.2"
+    "webpack-cli": "^4.10.0"
   }
 }
