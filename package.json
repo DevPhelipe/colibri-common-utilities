@@ -1,6 +1,6 @@
 {
   "name": "@p1nhu/colibri-common-utils",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "description": "colibri-common-utils",
   "main": "index.js",
   "scripts": {
