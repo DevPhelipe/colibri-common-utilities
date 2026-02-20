@@ -1,9 +1,9 @@
 import '../../lib/websocket.bundle.js';
-declare type SessionReturnType = {
+type SessionReturnType = {
     isConnected: boolean;
     message: string;
 };
-declare type ChannelErrorType = {
+type ChannelErrorType = {
     Connected: boolean;
     ErroType: string;
     Message: string;

@@ -27,44 +27,60 @@ const Formatters = {
         return value.toLocaleString("pt-br", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     },
     cpfCnpjMask(value) {
-        let valueNumber = Converters.getNumbers(value);
-        if (valueNumber.length > 11) {
-            return Formatters.cnpjMask(value);
+        if (!value)
+            return '';
+        let valueCleaned = value.replace(/[^A-Za-z0-9]/g, "").toUpperCase();
+        const containsLetters = /[A-Za-z]/.test(valueCleaned);
+        if (containsLetters && valueCleaned.length > 11) {
+            return Formatters.cnpjMask(valueCleaned);
+        }
+        else if (containsLetters && valueCleaned.length <= 11) {
+            return valueCleaned;
+        }
+        else if (!containsLetters && valueCleaned.length > 11) {
+            return Formatters.cnpjMask(valueCleaned);
         }
         else {
-            return Formatters.cpfMask(value);
+            return Formatters.cpfMask(valueCleaned);
         }
     },
     cnpjMask(value) {
-        let valueNumber = Converters.getNumbers(value);
-        let valueMasked = "";
-        let part = [];
-        part.push(valueNumber.substring(0, 2));
-        part.push(valueNumber.substring(2, 5));
-        part.push(valueNumber.substring(5, 8));
-        part.push(valueNumber.substring(8, 12));
-        part.push(valueNumber.substring(12, 14));
-        valueMasked = part[0] + "." + part[1] + "." + part[2] + "/" + part[3] + "-" + part[4];
-        valueMasked = valueMasked.slice(0, getLastNumberIndex(valueMasked) + 1);
-        if (valueMasked.length == 1 && !Validations.isNumeric(valueMasked)) {
-            return "";
+        if (!value)
+            return value;
+        let valueCleaned = value.replace(/[^0-9A-Za-z]/g, '').toUpperCase();
+        valueCleaned = valueCleaned.substring(0, 14);
+        if (valueCleaned.length === 0)
+            return '';
+        const base = valueCleaned.substring(0, 12);
+        const dv = valueCleaned.substring(12, 14);
+        const raw = base + dv;
+        let masked = '';
+        if (raw.length > 0) {
+            const p0 = raw.substring(0, 2);
+            const p1 = raw.substring(2, 5);
+            const p2 = raw.substring(5, 8);
+            const p3 = raw.substring(8, 12);
+            const p4 = raw.substring(12, 14);
+            if (p0)
+                masked += p0;
+            if (p1 && raw.length > 2)
+                masked += '.' + p1;
+            if (p2 && raw.length > 5)
+                masked += '.' + p2;
+            if (p3 && raw.length > 8)
+                masked += '/' + p3;
+            if (p4 && raw.length > 12)
+                masked += '-' + p4;
         }
-        return valueMasked;
+        console.log(masked);
+        return masked;
     },
     cpfMask(value) {
-        let valueNumbers = Converters.getNumbers(value);
-        let valueMasked = "";
-        let part = [];
-        part.push(valueNumbers.substring(0, 3));
-        part.push(valueNumbers.substring(3, 6));
-        part.push(valueNumbers.substring(6, 9));
-        part.push(valueNumbers.substring(9));
-        valueMasked = part[0] + "." + part[1] + "." + part[2] + "-" + part[3];
-        valueMasked = valueMasked.slice(0, getLastNumberIndex(valueMasked) + 1);
-        if (valueMasked.length == 1 && !Validations.isNumeric(valueMasked)) {
-            return "";
-        }
-        return valueMasked;
+        let valueNumbers = value.replace(/[^A-Za-z0-9]/g, "");
+        valueNumbers = valueNumbers.replace(/(\d{3})(\d)/, "$1.$2");
+        valueNumbers = valueNumbers.replace(/(\d{3})(\d)/, "$1.$2");
+        valueNumbers = valueNumbers.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+        return valueNumbers;
     },
     chassiMask(value) {
         if (!value)
@@ -194,6 +210,18 @@ function getLastNumberIndex(value) {
     let lastElement = 0;
     for (let i = value.length - 1; i >= 0; i--) {
         if (Validations.isNumeric(value[i].toString())) {
+            lastElement = i;
+            break;
+        }
+    }
+    return lastElement;
+}
+;
+function getLastAlphanumericIndex(value) {
+    let lastElement = 0;
+    for (let i = value.length - 1; i >= 0; i--) {
+        const char = value[i];
+        if (Validations.isNumeric(char) || Validations.isLetter(char)) {
             lastElement = i;
             break;
         }

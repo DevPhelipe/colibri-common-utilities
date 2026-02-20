@@ -1,5 +1,5 @@
 import '../../lib/websocket.bundle.js';
-export declare type MqttOptionsType = {
+export type MqttOptionsType = {
     userName: string;
     password: string;
     useSSL: boolean;
@@ -7,13 +7,13 @@ export declare type MqttOptionsType = {
     mqttVersion: number;
     reconnect: boolean;
 };
-declare type ClientManagerType = {
+type ClientManagerType = {
     session: any;
     successHandler: Function | null;
     stopHandler: Function | null;
     errorHandler: Function | null;
 };
-declare type SessionReturnType = {
+type SessionReturnType = {
     isConnected: boolean;
     message: string;
 };

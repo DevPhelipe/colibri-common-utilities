@@ -1,4 +1,3 @@
-// import Others from '../others';
 import '../../lib/websocket.bundle.js';
 export default class NirvanaConnection {
     constructor() {
