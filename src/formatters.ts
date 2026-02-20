@@ -55,43 +55,33 @@ const Formatters = {
   },
 
   cnpjMask(value: string): string {
-    if (!value) return '';
+    if (!value) return value;
     
-    let cleanValue = value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+    let valueCleaned = value.replace(/[^0-9A-Za-z]/g, '').toUpperCase();
     
-    let base = cleanValue.substring(0, 12);
+    valueCleaned = valueCleaned.substring(0, 14);
     
-    let remainingChars = cleanValue.substring(12);
-    let dv = remainingChars.replace(/[^0-9]/g, '').substring(0, 2);
+    if (valueCleaned.length === 0) return '';
     
-    base = base.substring(0, 12);
-    
+    const base = valueCleaned.substring(0, 12);
+    const dv = valueCleaned.substring(12, 14);
     const raw = base + dv;
-    const finalRaw = raw.substring(0, 14);
-    
+   
     let masked = '';
-    if (finalRaw.length > 0) {
-      if (finalRaw.length >= 1) {
-        masked = finalRaw.substring(0, Math.min(2, finalRaw.length));
-        
-        if (finalRaw.length >= 3) {
-          masked += '.' + finalRaw.substring(2, Math.min(5, finalRaw.length));
-          
-          if (finalRaw.length >= 6) {
-            masked += '.' + finalRaw.substring(5, Math.min(8, finalRaw.length));
-            
-            if (finalRaw.length >= 9) {
-              masked += '/' + finalRaw.substring(8, Math.min(12, finalRaw.length));
-              
-              if (finalRaw.length >= 13) {
-                masked += '-' + finalRaw.substring(12, Math.min(14, finalRaw.length));
-              }
-            }
-          }
-        }
-      }
+    if (raw.length > 0) {
+      const p0 = raw.substring(0, 2);
+      const p1 = raw.substring(2, 5);
+      const p2 = raw.substring(5, 8);
+      const p3 = raw.substring(8, 12);
+      const p4 = raw.substring(12, 14);
+     
+      if (p0) masked += p0;
+      if (p1 && raw.length > 2) masked += '.' + p1;
+      if (p2 && raw.length > 5) masked += '.' + p2;
+      if (p3 && raw.length > 8) masked += '/' + p3;
+      if (p4 && raw.length > 12) masked += '-' + p4;
     }
-    
+   
     return masked;
   },
 
