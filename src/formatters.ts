@@ -82,6 +82,7 @@ const Formatters = {
       if (p4 && raw.length > 12) masked += '-' + p4;
     }
    
+    console.log(masked);
     return masked;
   },
 
