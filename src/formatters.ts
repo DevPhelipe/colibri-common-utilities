@@ -34,7 +34,7 @@ const Formatters = {
   },
 
   cpfCnpjMask(value: string): string {
-    if (!value) return value;
+    if (!value) return '';
     
     let valueCleaned: string = value.replace(/[^A-Za-z0-9]/g, "").toUpperCase();
     
@@ -55,35 +55,44 @@ const Formatters = {
   },
 
   cnpjMask(value: string): string {
-    if (!value) return value;
+    if (!value) return '';
     
-    value = value.replace(/[^0-9A-Za-z]/g, '').toUpperCase();
+    let cleanValue = value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
     
-    if (value.length > 0) {
-      const base = value.substring(0, 12);
-      const dv = value.substring(12, 14).replace(/[^0-9]/g, '');
-      const raw = base + dv;
-      
-      let masked = '';
-      if (raw.length > 0) {
-        const p0 = raw.substring(0, 2);
-        const p1 = raw.substring(2, 5);
-        const p2 = raw.substring(5, 8);
-        const p3 = raw.substring(8, 12);
-        const p4 = raw.substring(12, 14);
+    let base = cleanValue.substring(0, 12);
+    
+    let remainingChars = cleanValue.substring(12);
+    let dv = remainingChars.replace(/[^0-9]/g, '').substring(0, 2);
+    
+    base = base.substring(0, 12);
+    
+    const raw = base + dv;
+    const finalRaw = raw.substring(0, 14);
+    
+    let masked = '';
+    if (finalRaw.length > 0) {
+      if (finalRaw.length >= 1) {
+        masked = finalRaw.substring(0, Math.min(2, finalRaw.length));
         
-        if (p0) masked += p0;
-        if (p1) masked += '.' + p1;
-        if (p2) masked += '.' + p2;
-        if (p3) masked += '/' + p3;
-        if (p4) masked += '-' + p4;
+        if (finalRaw.length >= 3) {
+          masked += '.' + finalRaw.substring(2, Math.min(5, finalRaw.length));
+          
+          if (finalRaw.length >= 6) {
+            masked += '.' + finalRaw.substring(5, Math.min(8, finalRaw.length));
+            
+            if (finalRaw.length >= 9) {
+              masked += '/' + finalRaw.substring(8, Math.min(12, finalRaw.length));
+              
+              if (finalRaw.length >= 13) {
+                masked += '-' + finalRaw.substring(12, Math.min(14, finalRaw.length));
+              }
+            }
+          }
+        }
       }
-      
-      masked = masked.slice(0, getLastAlphanumericIndex(masked) + 1);
-      
-      value = masked;
     }
-    return value;
+    
+    return masked;
   },
 
   cpfMask(value: string): string {
